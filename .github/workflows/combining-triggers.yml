@@ -1,0 +1,27 @@
+name: "Workflow Dispatch"
+
+on:
+  workflow_dispatch:
+    inputs:
+      username:
+        description: "Username"
+        required: true
+        type: string
+        default: "Rafael"
+
+      age:
+        description: "Age"
+        required: true
+        type: number
+
+  pull_request:
+
+jobs:
+    echo-user-info-job:
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "Echo Username"
+              run: echo " The Username is ${{inputs.username}} "
+
+            - name: "Echo Age"
+              run: echo "The Age is ${{inputs.age}}"
