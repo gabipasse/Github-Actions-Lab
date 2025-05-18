@@ -1,4 +1,4 @@
-name: "Workflow Dispatch"
+name: "Workflow Dispatch and PR Demo"
 
 on:
   workflow_dispatch:
