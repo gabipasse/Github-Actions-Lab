@@ -1,0 +1,14 @@
+name: "Pull Request Trigger Demo"
+
+on:
+  pull_request:
+    branches:
+        - main
+
+jobs:
+    echo-hi-all:
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "Echo Hi All"
+              run: |
+                echo "Hi:  All"
