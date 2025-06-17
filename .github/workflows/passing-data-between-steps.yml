@@ -6,7 +6,7 @@ on:
 jobs:
     unique_Job:
         runs-on: "ubuntu-latest"
-        name: my_first_job
+        name: "Unique Job"
         steps:
             - name: "Setting Name Variable"
               id: "azul"
