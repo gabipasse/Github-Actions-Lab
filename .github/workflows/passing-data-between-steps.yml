@@ -1,0 +1,18 @@
+name: Passing Data Between Steps
+
+on:
+    workflow_dispatch:
+
+jobs:
+    unique_Job:
+        runs-on: "ubuntu-latest"
+        name: my_first_job
+        steps:
+            - name: "Setting Name Variable"
+              id: "azul"
+              run: |
+               echo "name=Rafael" >> $GITHUB_OUTPUT
+
+            - name: "Echo Name Variable"
+              run: |
+               echo ${{steps.azul.outputs.name}}
