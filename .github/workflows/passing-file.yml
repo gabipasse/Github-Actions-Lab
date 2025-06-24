@@ -21,24 +21,15 @@ jobs:
 
             - name: "Run Unit Tests"
               run: |
-                cd backend
+                cd ${{github.workspace}}/backend
                 tox -e unit
                 ls -la ${{github.workspace}}/backend
-
-            - name: "Prepare File for Upload"
-              run: |
-                cd ${{github.workspace}}
-                ls -la backend/.coverage
-                head -n 5 backend/.coverage
-
-                cp backend/.coverage backend/coverage.sqlite
-                ls -la backend/coverage.sqlite
 
             - name: "Upload Artifact"
               uses: actions/upload-artifact@v4
               with:
                 name: coverage
-                path: ${{github.workspace}}/backend/coverage.sqlite
+                path: ${{github.workspace}}/backend/.coverage
 
     download-artifact-job:
         runs-on: "ubuntu-latest"
