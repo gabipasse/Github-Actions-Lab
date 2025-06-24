@@ -1,79 +1,57 @@
 name: "Passing File"
 
 on:
-  workflow_dispatch:
+    workflow_dispatch:
 
 jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout source code"
-        uses: actions/checkout@v4
+    upload-artifact-job:
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "Checkout Source Code"
+              uses: actions/checkout@v4
 
-      - name: "Install Python 3.10"
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10'
+            - name: "Donwload Python"
+              uses: actions/setup-python@v5
+              with:
+                python-version: "3.10"
 
-      - name: "Install tox and requirements"
-        run: |
-          pip install tox
-          cd backend
-          pip install -r requirements-unit.txt
+            - name: "Install Tox"
+              run: |
+                pip install tox
 
-      - name: "Run unit tests"
-        run: |
-          cd backend
-          tox -e unit
-          echo "Current directory: $(pwd)"
-          echo "Files in current directory:"
-          ls -la
-          echo "Files in backend directory:"
-          ls -la ${{ github.workspace }}/backend
-          echo "Checking for .coverage file:"
-          test -f .coverage && echo ".coverage exists" || echo ".coverage does not exist"
+            - name: "Run Unit Tests"
+              run: |
+                cd backend
+                tox -e unit
+                ls -la ${{github.workspace}}/backend
 
-      - name: "Debug workspace structure"
-        run: |
-          echo "Workspace root: ${{ github.workspace }}"
-          echo "Current directory: $(pwd)"
-          echo "Listing all files recursively:"
-          find ${{ github.workspace }} -name ".coverage" -type f
-          echo "Listing backend directory contents:"
-          ls -la backend/
+            - name: "Prepare File for Upload"
+              run: |
+                cd ${{github.workspace}}
+                ls -la backend/.coverage
+                head -n 5 backend/.coverage
 
-      - name: "Prepare for artifact upload"
-        run: |
-          cd ${{ github.workspace }}
-          echo "Current directory before upload: $(pwd)"
-          echo "File permissions:"
-          ls -la backend/.coverage
-          echo "File content (first few lines):"
-          head -n 5 backend/.coverage
+                mkdir -p temp_artifacts
+                cp backend/.coverage temp_artifacts/coverage.sqlite
+                ls -la temp_artifacts/coverage.sqlite
 
-          # Create a temporary directory and copy the coverage file
-          mkdir -p temp_artifacts
-          cp backend/.coverage temp_artifacts/coverage.sqlite
-          echo "Copied file exists:"
-          ls -la temp_artifacts/coverage.sqlite
+            - name: "Upload Artifact"
+              uses: actions/upload-artifact@v4
+              with:
+                name: coverage
+                path: temp_artifacts/coverage.sqlite
 
-      - name: "Upload coverage artifact"
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage
-          path: temp_artifacts/coverage.sqlite
-          if-no-files-found: error
+    download-artifact-job:
+        runs-on: "ubuntu-latest"
+        needs: ["upload-artifact-job"]
+        steps:
+            - name: "Download Artifact"
+              uses: actions/download-artifact@v4
+              with:
+                name: coverage
+                path: ${{github.workspace}}
 
-  load-file-example:
-    runs-on: ubuntu-latest
-    needs: [unit-tests]
-    steps:
-      - name: "Download artifact"
-        uses: actions/download-artifact@v4
-        with:
-          name: coverage
-          path: backend/.coverage
-
-      - name: "List folder"
-        run: ls -la ${{ github.workspace }}/backend
+            - name: "List Folder"
+              run: |
+                ls -la ${{github.workspace}}
 
