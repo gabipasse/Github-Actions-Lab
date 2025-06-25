@@ -1,0 +1,43 @@
+name: Matrix Strategy Jobs
+
+on:
+    workflow_dispatch:
+
+jobs:
+    deployment-job:
+        strategy:
+            matrix:
+                os: ["ubuntu-20.04", "ubuntu-22.04"]
+                python-version: ["3.8", "3.10"]
+                include:
+                    - output: "txt"
+                    - output: "doc"
+                      log: "root"
+
+                exclude:
+                    - os: "ubuntu-20.04"
+                      python-version: ["3.8"]
+
+        runs-on: ${{ matrix.os }}
+        steps:
+            - name: "Check Output Configuration"
+              run: |
+                echo ${{ matrix.output }}
+                echo ${{ matrix.log }}
+
+            - name: "Checkout Source Code"
+              uses: actions/checkout@v4
+
+            - name: "Install Python"
+              uses: actions/setup-python@v5
+              with:
+                python-version: ${{ matrix.python-version }}
+
+            - name: "Install Tox"
+              run: |
+                pip install tox
+
+            - name: "Run Unit Tests"
+              run: |
+                cd backend
+                tox -e unit
