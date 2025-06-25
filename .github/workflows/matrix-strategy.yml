@@ -16,7 +16,7 @@ jobs:
 
                 exclude:
                     - os: "ubuntu-24.04"
-                      python-version: ["3.8"]
+                      python-version: "3.8"
 
         runs-on: ${{ matrix.os }}
         steps:
