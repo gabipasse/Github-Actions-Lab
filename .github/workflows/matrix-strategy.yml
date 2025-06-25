@@ -9,6 +9,7 @@ jobs:
             matrix:
                 os: ["ubuntu-24.04", "ubuntu-22.04"]
                 python-version: ["3.8", "3.10"]
+                output: ["txt", "doc"]
                 include:
                     - output: "txt"
                     - output: "doc"
