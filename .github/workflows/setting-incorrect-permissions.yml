@@ -1,0 +1,23 @@
+name: "Setting Incorrect Permissions"
+
+on:
+    workflow_dispatch:
+
+permissions:
+            contents: "read"
+
+jobs:
+    setting-incorrect-permission:
+        runs-on: "ubuntu-latest"
+        steps:
+            - name: "Cloning Repository"
+              uses: action/checkout@v4
+
+            - name: "Trying to Commit to Repository"
+              run: |
+                touch new_file_2.txt
+                git config --global user.email "teste@gmail.com"
+                git config --global user.name "Rafael Teste"
+                git add new_file_2.txt
+                git commit . -m ""Attempt to Write""
+                git push origin ${{ github.ref }}
