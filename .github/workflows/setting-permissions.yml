@@ -16,8 +16,8 @@ jobs:
             - name: "Commit to Repository"
               run: |
                 touch new_file.txt
-                git config set --global user.email "Rafael Teste"
-                git config set --global user.name "teste@gmail.com"
+                git config set --global user.name "Rafael Teste"
+                git config set --global user.email "teste@gmail.com"
                 git add new_file.txt
                 git commit . -m "Attempt to Write"
                 git push origin ${{ github.ref }}
