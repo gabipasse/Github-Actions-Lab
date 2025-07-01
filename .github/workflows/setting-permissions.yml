@@ -1,0 +1,23 @@
+name: "Setting Correct Permissions"
+
+on:
+    workflow_dispatch:
+
+jobs:
+    commit-to-repository:
+        runs-on: "ubuntu-latest"
+        permissions:
+            contents: "write"
+
+        steps:
+            - name: "Clone Repository"
+              uses: actions/checkout@v4
+
+            - name: "Commit to Repository"
+              run: |
+                touch new_file.txt
+                git config set --global user.email "Rafael Teste"
+                git config set --global user.name "teste@gmail.com"
+                git add new_file.txt
+                git commit . -m "Attempt to Write"
+                git push origin ${{ github.ref }}
