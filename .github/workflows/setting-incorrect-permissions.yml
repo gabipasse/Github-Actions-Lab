@@ -11,7 +11,7 @@ jobs:
         runs-on: "ubuntu-latest"
         steps:
             - name: "Cloning Repository"
-              uses: action/checkout@v4
+              uses: actions/checkout@v4
 
             - name: "Trying to Commit to Repository"
               run: |
